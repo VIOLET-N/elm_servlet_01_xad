@@ -18,6 +18,7 @@ public class CartDaoImpl implements CartDao {
 
     @Override
     public List<Cart> listCart(Cart cart) throws Exception {
+//        System.out.println(cart);
         List<Cart> list = new ArrayList<>();
         StringBuffer sql = new StringBuffer();
         sql.append("select elm_cart.*,");
@@ -35,7 +36,7 @@ public class CartDaoImpl implements CartDao {
         sql.append("elm_business.business_img b_business_img,");
         sql.append("elm_business.order_type_id b_order_type_id,");
         sql.append("elm_business.star_price b_star_price,");
-        sql.append("elm_business.deliver_price b_deliver_price,");
+        sql.append("elm_business.delivery_price b_delivery_price");
         sql.append(" from (elm_cart left join elm_food on elm_cart.food_id=elm_food.food_id) ");
         sql.append(" left join elm_business on elm_cart.business_id=elm_business.business_id ");
         sql.append(" where 1=1 ");
@@ -45,9 +46,9 @@ public class CartDaoImpl implements CartDao {
         if (cart.getUserId() != null){
             sql.append(" and elm_cart.user_id='").append(cart.getUserId()).append("'");
         }
-
+//        System.out.println("sql |-> " + sql.toString());
         try {
-            connection = statement.getConnection();
+            connection = DBUtil.getConnection();
             statement = connection.prepareStatement(sql.toString());
             resultSet = statement.executeQuery();
             while (resultSet.next()){
@@ -88,7 +89,7 @@ public class CartDaoImpl implements CartDao {
     @Override
     public int saveCart(Cart cart) throws Exception {
         int i = 0;
-        String sql = "insert into cart values (null,?,?,?,1)";
+        String sql = "insert into elm_cart values (null,?,?,?,1)";
         try {
             connection = DBUtil.getConnection();
             statement = connection.prepareStatement(sql);
