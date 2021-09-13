@@ -38,4 +38,18 @@ public class BusinessServiceImpl implements BusinessService {
         }
         return business;
     }
+
+    @Override
+    public List<Business> listBusinessByFoodOrName(String foodOrName) {
+        List<Business> list = new ArrayList<>();
+        try {
+            DBUtil.getConnection();
+            list = dao.listBusinessByFoodOrName(foodOrName);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            DBUtil.close();
+        }
+        return list;
+    }
 }

@@ -28,4 +28,9 @@ public class BusinessController {
         }
         return service.getBusinessById(id);
     }
+
+    public Object listBusinessByFoodOrName(HttpServletRequest request, HttpServletResponse response){
+        String foodOrName = request.getParameter("foodOrName");
+        return service.listBusinessByFoodOrName(foodOrName);
+    }
 }

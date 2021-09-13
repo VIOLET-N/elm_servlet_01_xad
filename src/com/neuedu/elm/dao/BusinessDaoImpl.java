@@ -68,4 +68,36 @@ public class BusinessDaoImpl implements BusinessDao {
         }
         return business;
     }
+
+    @Override
+    public List<Business> listBusinessByFoodOrName(String foodOrName) throws Exception {
+        List<Business> list = new ArrayList<>();
+        StringBuffer sql = new StringBuffer("select * from elm_business where business_name like '%");
+        sql.append(foodOrName);
+        sql.append("%'");
+        sql.append(" or business_id in (select elm_food.business_id from elm_food where elm_food.food_name like '%");
+        sql.append(foodOrName);
+        sql.append("%')");
+        try {
+            connection = DBUtil.getConnection();
+            statement = connection.prepareStatement(sql.toString());
+            resultSet = statement.executeQuery();
+            while (resultSet.next()){
+                Business business = new Business();
+                business.setBusinessId(resultSet.getInt("business_id"));
+                business.setBusinessName(resultSet.getString("business_name"));
+                business.setBusinessAddress(resultSet.getString("business_address"));
+                business.setBusinessExplain(resultSet.getString("business_explain"));
+                business.setBusinessImg(resultSet.getString("business_img"));
+                business.setOrderTypeId(resultSet.getInt("order_type_id"));
+                business.setStarPrice(resultSet.getDouble("star_price"));
+                business.setDeliveryPrice(resultSet.getDouble("delivery_price"));
+                business.setRemarks(resultSet.getString("remarks"));
+                list.add(business);
+            }
+        }finally {
+            DBUtil.close(resultSet, statement);
+        }
+        return list;
+    }
 }
